@@ -4,6 +4,7 @@ Nicolas FELS
 But: Jeu du pendu en version graphique
 A faire:'''
 
-import tkinter as tk
+from tkinter import Tk, Label, Button
 
-root = tk.Tk()
+
+
