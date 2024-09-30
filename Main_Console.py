@@ -2,7 +2,7 @@
 Nicolas FELS
 30/09/2024
 But: Main du jeu du pendu version console
-A faire: '''
+A faire: Proposer de rejouer et sauvegarder les scores'''
 
 from Library import fJeu
 
