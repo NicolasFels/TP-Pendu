@@ -10,12 +10,16 @@ print("Bienvenu dans le jeu du pendu")
 choix = False
 while choix == False:
     rep = input("Voulez vous faire une partie ? (o ou n): ")
-    if rep.lower not in [o, n]:
+    rep.lower()
+    if rep != "o" and rep != "n":
         print("Je n'ai pas compris votre demande.")
     else:
         choix = True
-Victoire, Mot = fJeu()
-if Victoire == True:
-    print("Vous avez gagné !")
+if rep == "o":
+    Victoire, Mot = fJeu()
+    if Victoire == True:
+        print("Vous avez gagné !")
+    else:
+        print("Vous avez perdu, le mot était: ", Mot)
 else:
-    print("Vous avez perdu, le mot était: " + Mot)
+    print("Au revoir")

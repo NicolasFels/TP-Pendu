@@ -13,16 +13,17 @@ def fChoix_mot():
     '''
     fich = open('mots.txt', 'r')
     liste_mots = fich.readlines()
-    num = randint(0, len(liste_mots))
+    num = randint(0, len(liste_mots)-1)
     return liste_mots[num]
 
-def fAffichage(pMot, pLettres_trouvees):
+def fAffichage(pMot):
     '''Renvoi le mot en affichant la premiere lettre et les lettres 
     trouvee et des _ pour les autres
     '''
+    global Lettres_trouvees
     Affiche = pMot[0]
-    for lettre in pMot[1:]:
-        if lettre in pLettres_trouvees:
+    for lettre in pMot[1:-1]:
+        if lettre in Lettres_trouvees:
             Affiche += lettre
         else:
             Affiche += " _"
@@ -33,49 +34,57 @@ def fProposition():
     la met en minuscule, sinon redemande jusqu'à avoir une proposition correcte.
     Renvoi la proposition.
     '''
+    global Liste_prop
     valide = False
     while valide == False:
         prop = input("Entree une lettre ou un mot: ")
-        prop.lower()
-        if prop.isalpha() == True:
-            valide = True
+        if len(prop) == 1:
+            prop.lower()
+            if prop.isalpha() == True:
+                if prop not in Liste_prop:
+                    Liste_prop.append(prop)
+                    valide = True
+                else:
+                    print("Deja proposer ou non une lettre")
     return prop
 
-def fVerification_prop(pMot, pProp, pLettres_trouvees):
+def fVerification_prop(pMot, pProp):
     '''Verifie si la proposition est dans le mot ou est le mot lui meme.
     Renvoi True si c'est le cas, False sinon
     '''
-    if pProp in pMot or pProp == pMot:
-        for lettre in pProp:
-            if lettre not in pLettres_trouvees:
-                pLettres_trouvees.append(lettre)
+    global Lettre_trouvees
+    if pProp in pMot:
+        if pProp not in Lettres_trouvees:
+            Lettres_trouvees.append(pProp)
         return True
     return False
 
-def fVictoire(pMot, pLettres_trouvees):
-    '''Verifie si toutes les lettres ont ete trouvees et renvoi True si c'est
-    le cas.
+def fVictoire(pMot):
+    '''Verifie si le joueur a gagner
     '''
-    Lettre_mot = [lettre for lettre in pMot]
-    if len(Lettre_mot) == len(pLettres_trouvees):
+    if "_" not in fAffichage(pMot):
         return True
     return False
-
 
 def fJeu():
     '''Fonction principale qui gere le jeu du pendu. Renvoie True en as de victoire
     False sinon, ainsi que le mot
     '''
+    global Lettres_trouvees, Liste_prop
     Mot_cache = fChoix_mot()
     Lettres_trouvees = []
-    fAffichage(Mot_cache, Lettres_trouvees)
+    Liste_prop = []
+    print(fAffichage(Mot_cache))
     Vie = 8
-    while Vie > 8:
+    while Vie > 0:
+        print("Ce que vous avez deja proposez: ", Liste_prop)
+        print("Ce que vous avez trouvee : ", Lettres_trouvees)
         Proposition = fProposition()
-        if fVerification_prop(Mot_cache, Proposition, Lettres_trouvees) == False:
+        if fVerification_prop(Mot_cache, Proposition) == False:
             print(Proposition + " n'est pas une lettre du mot ou le mot !")
             Vie -= 1
-        fAffichage(Mot_cache, Lettres_trouvees)
-        if fVictoire(Mot_cache, Lettres_trouvees) == True:
+            print("Il vous reste ", Vie, " vies")
+        print(fAffichage(Mot_cache))
+        if fVictoire(Mot_cache) == True:
             return True, Mot_cache
     return False, Mot_cache
